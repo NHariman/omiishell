@@ -1,0 +1,88 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         ::::::::             #
+#    Makefile                                           :+:    :+:             #
+#                                                      +:+                     #
+#    By: nhariman <nhariman@student.codam.nl>         +#+                      #
+#                                                    +#+                       #
+#    Created: 2019/10/31 23:42:48 by nhariman      #+#    #+#                  #
+#    Updated: 2020/11/26 19:38:41 by nhariman      ########   odam.nl          #
+#                                                                              #
+# **************************************************************************** #
+
+COMPILE = gcc
+# COMPILE = clang
+
+FLAGS = -Wall -Werror -Wextra
+
+MINISHELL =		main.c \
+				srcs/main/get_next_line.c \
+				srcs/main/gen_functions.c \
+				srcs/main/ft_argv.c \
+				srcs/main/ft_envp.c \
+				srcs/main/dollar_sign.c \
+				srcs/main/quotation_handler.c \
+				srcs/main/quotations_parser.c \
+				srcs/main/no_quotations_parser.c \
+				srcs/main/main_parser.c \
+				srcs/main/echo_parser.c \
+				srcs/main/rd_parser.c \
+				srcs/main/env_parser.c \
+				srcs/main/execv_parser.c \
+				srcs/main/detail_functions.c \
+				srcs/cd/ft_cd.c \
+				srcs/pwd/ft_pwd.c \
+				srcs/env/env.c \
+				srcs/exit/exit.c \
+				srcs/free/free.c \
+				srcs/execv/ft_execv.c \
+				srcs/execv/ft_make_array.c \
+				srcs/execv/ft_preprocessor.c
+
+ECHO =			srcs/echo/echo.c\
+				srcs/echo/check_nflag.c\
+				srcs/echo/ft_skip_character.c\
+				srcs/echo/ft_add_enviorment.c\
+				srcs/echo/ft_clean_echo.c\
+				srcs/echo/ft_get_variable.c\
+				srcs/rd/cutstring_rd.c\
+				srcs/rd/rd_check.c\
+				srcs/rd/re_direct.c\
+				srcs/rd/rd_loop.c\
+				srcs/rd/ft_strcpystr.c\
+				srcs/rd/make_files.c \
+
+OMINISHELL = 	$(MINISHELL:.c=.o)
+
+OECHO =			$(ECHO:.c=.o)
+
+NAME = minishell
+
+all: $(NAME)
+
+$(NAME): $(OMINISHELL) $(OECHO) srcs/libft/libft.a
+	@$(COMPILE) $(OMINISHELL) $(OECHO) -g -fsanitize=address srcs/libft/libft.a -o $@
+	@chmod 111 ./minishell
+
+srcs/libft/libft.a:
+	@cd srcs/libft && $(MAKE)
+
+%.o: %.c srcs/minishell.h srcs/yusha.h srcs/niks.h
+	@$(COMPILE) -c $(FLAGS) -o $@ -c $<
+
+clean:
+	@$(RM) $(OECHO) $(OMINISHELL)
+	@cd srcs/libft && $(MAKE) clean
+
+fclean: clean
+	@$(RM) $(NAME)
+	@cd srcs/libft && $(MAKE) fclean
+
+re: fclean all
+
+test: re
+	./minishell
+
+leaks: fclean $(OMINISHELL) $(OECHO) srcs/libft/libft.a
+	@$(COMPILE) $(OMINISHELL) $(OECHO) srcs/libft/libft.a -o minishell
+	./minishell
