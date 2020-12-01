@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/23 23:27:59 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/26 19:53:36 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/11/30 20:00:15 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int		ft_execute_path(char **pathcmd, char **argv, t_shell *shell)
 			execve(pathcmd[i], argv, shell->env);
 			i++;
 		}
-		ft_printf_err("minishell: %s: command not found.\n", argv[0],
+		ft_printf_err("omiishell: %s: command not found.\n", argv[0],
 		strerror(errno));
 		exit(1);
 	}
@@ -86,7 +86,7 @@ int				ft_execve(char **argv, t_shell *shell)
 	if (child_pid == 0)
 	{
 		execve(argv[0], argv, shell->env);
-		ft_printf_err("minishell: %s: %s\n", argv[0],
+		ft_printf_err("omiishell: %s: %s\n", argv[0],
 		strerror(errno));
 		exit(1);
 	}
@@ -115,7 +115,7 @@ void			ft_execute(char *cmd, char *str, char end, t_shell *shell)
 		tmp = ft_argv(str, shell);
 		argv = ft_add_arr_front(tmp, cmd);
 	}
-	if (ft_strchr("\n;\0", end))
+	if (ft_strchr(";\0", end))
 	{
 		if (ft_ispath(cmd))
 			ft_execve(argv, shell);

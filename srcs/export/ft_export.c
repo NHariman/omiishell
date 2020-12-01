@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/23 23:27:53 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/27 08:28:41 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/11/30 20:00:41 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void		ft_add_to_env(char **argv, t_shell *shell)
 		if (valid == 1 || valid == 0)
 			ft_update_env(shell, argv[i]);
 		else if (valid == -1)
-			ft_printf_err("minishell: export: `%s': not a valid identifier\n", argv[i]);
+			ft_printf_err("omiishell: export: `%s': not a valid identifier\n", argv[i]);
 		i++;
 	}
 }

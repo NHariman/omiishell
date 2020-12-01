@@ -6,7 +6,7 @@
 #    By: nhariman <nhariman@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/31 23:42:48 by nhariman      #+#    #+#                  #
-#    Updated: 2020/11/30 23:17:52 by nhariman      ########   odam.nl          #
+#    Updated: 2020/11/29 20:28:53 by nhariman      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,6 @@ MINISHELL =		main.c \
 				srcs/main/main_parser.c \
 				srcs/main/echo_parser.c \
 				srcs/main/rd_parser.c \
-				srcs/valid_input/ft_valid_pipe.c\
 				srcs/subparsers/ft_get_rdin.c \
 				srcs/subparsers/env_parser.c \
 				srcs/subparsers/execv_parser.c \
@@ -67,13 +66,13 @@ OMINISHELL = 	$(MINISHELL:.c=.o)
 
 OECHO =			$(ECHO:.c=.o)
 
-NAME = omiishell
+NAME = minishell
 
 all: $(NAME)
 
 $(NAME): $(OMINISHELL) $(OECHO) srcs/libft/libft.a
 	@$(COMPILE) $(OMINISHELL) $(OECHO) -g -fsanitize=address srcs/libft/libft.a -o $@
-	@chmod 311 ./omiishell
+	@chmod 311 ./minishell
 
 srcs/libft/libft.a:
 	@cd srcs/libft && $(MAKE)
@@ -92,8 +91,8 @@ fclean: clean
 re: fclean all
 
 test: re
-	./omiishell
+	./minishell
 
 leaks: fclean $(OMINISHELL) $(OECHO) srcs/libft/libft.a
-	@$(COMPILE) $(OMINISHELL) $(OECHO) srcs/libft/libft.a -o omiishell
-	./omiishell
+	@$(COMPILE) $(OMINISHELL) $(OECHO) srcs/libft/libft.a -o minishell
+	./minishell

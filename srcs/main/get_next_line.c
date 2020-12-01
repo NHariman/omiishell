@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 17:14:10 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/14 17:27:59 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/11/28 19:28:02 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static char				*read_line(t_gnl gnl)
 
 static int				fill_line(t_gnl gnl, char **line)
 {
-	*line = ft_strdup(gnl.line_read);
+	*line = ft_strtrim(gnl.line_read, "\n");
 	if (!*line)
 		return (-1);
 	return (1);

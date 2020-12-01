@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 15:07:26 by ybakker       #+#    #+#                 */
-/*   Updated: 2020/11/26 19:57:34 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/11/30 21:39:55 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		main(int argc, char *argv[], char *envp[])
 	while (i > 0)
 	{
 		ft_printf("\033[1;36m");
-		ft_printf("minishell> ");
+		ft_printf("omiishell> ");
 		ft_printf("\033[0m");
 		i = get_next_line(0, &line);
 		minishell_parser(line, shell);

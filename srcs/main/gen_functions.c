@@ -6,11 +6,26 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/06 03:52:14 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/22 18:29:19 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/11/30 23:17:18 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int		ft_invalid_line(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i] == ' ')
+		i++;
+	if (str[i] == ';' && ft_backslash_check(str, i) % 2 == 0)
+	{
+		ft_printf_err("omiishell: syntax error near unexpected token `;'\n");
+		return (1);
+	}
+	return (0);
+}
 
 char	*ft_rm_endline(char *str)
 {

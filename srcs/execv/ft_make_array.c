@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/25 21:41:05 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/27 05:26:00 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/11/29 22:15:13 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ char			**ft_add_arr_front(char **arr, char *input)
 	int		i;
 
 	len = ft_arrlen(arr);
+	if (len == 0)
+		return (NULL);
 	i = 0;
 	new_argv = (char **)malloc(sizeof(char *) * (len + 2));
 	if (!new_argv)

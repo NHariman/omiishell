@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/06 23:38:16 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/17 20:09:01 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/11/28 19:46:14 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char			*ft_create_str(char *line, int i, int start)
 		str = ft_substr(line, start, i - start);
 	else
 		str = ft_substr(line, start, i - start);
-	tmp = ft_strtrim(str, " \n");
+	tmp = ft_strtrim(str, " ");
 	str = tmp;
 	tmp = gnl_strjoin(str, "\n");
 	str = tmp;
@@ -62,7 +62,7 @@ int					ft_echo_parser(char *line, int *i, t_shell *shell)
 	echo_str = ft_create_str(line, *i, start);
 	shell->echo = ft_strdup(echo_main(echo_str, echo, shell));
 	shell->check.echo = 1;
-	if (line[*i] == ';' || line[*i] == '\n' || line[*i] == '\0')
+	if (line[*i] == ';' || line[*i] == '\0')
 		ft_printf("%s", shell->echo);
 	free_echo_struct(echo);
 	return (0);

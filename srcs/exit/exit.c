@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/22 18:29:25 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/26 15:05:33 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/11/30 20:00:28 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,12 @@ static void		ft_parse_exit_argv(char **arr, int len)
 		if (len == 1)
 			exit(check);
 		else
-			ft_printf_err("minishell: exit: too many arguments\n");
+			ft_printf_err("omiishell: exit: too many arguments\n");
 	}
 	else
 	{
 		ft_printf_err(
-			"minishell: exit: %s: numeric argument required\n", arr[0]);
+			"omiishell: exit: %s: numeric argument required\n", arr[0]);
 			exit(255);
 	}
 	return ;
