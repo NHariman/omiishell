@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+resources/.DS_Store
+resources/niks/.DS_Store
+srcs/.DS_Store
+file*
+.DS_Store
+oldminishell/
