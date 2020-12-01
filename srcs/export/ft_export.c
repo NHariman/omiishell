@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/23 23:27:53 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/30 20:00:41 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/01 23:01:06 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,39 +46,29 @@ static void		ft_add_to_env(char **argv, t_shell *shell)
 	int		i;
 	int		valid;
 
-	i = 0;
+	i = 1;
 	while (argv[i] != (char *)0)
 	{
 		valid = ft_valid_envvar(argv[i]);
 		if (valid == 1 || valid == 0)
 			ft_update_env(shell, argv[i]);
 		else if (valid == -1)
+		{
 			ft_printf_err("omiishell: export: `%s': not a valid identifier\n", argv[i]);
+			shell->exit_code = 1;
+		}
 		i++;
 	}
 }
 
-int			ft_export(char *str, t_shell *shell)
+void			ft_export(t_shell *shell)
 {
-	char	**argv;
-	int		len;
-
 	shell->exit_code = 0;
-	len = ft_count_arr(str);
-	if (len == 0)
-		shell->exprt = ft_make_export_str(shell->env);
+	if (ft_arrlen(shell->argv) == 1)
+	{
+		shell->ret = ft_make_export_str(shell->env);
+		ft_printf("%s\n", shell->ret);
+	}
 	else
-	{
-		argv = ft_argv(str, shell);
-		if (!argv)
-			shell->exprt = ft_make_export_str(shell->env);
-		else
-			ft_add_to_env(argv, shell);
-	}
-	if (len == 0 || !argv)
-	{
-		shell->check.exp = 1;
-		return (0);
-	}
-	return (1);
+		ft_add_to_env(shell->argv, shell);
 }

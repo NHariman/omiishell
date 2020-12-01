@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/06 23:38:16 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/28 19:46:14 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/01 23:16:37 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,49 +21,75 @@
 ** test string, bad: echo "test >" '<       "test | " < test
 */
 
-static void			free_echo_struct(t_struct_m *echo)
+static int			ft_isflag(char *str)
 {
-	free(echo->cache);
-	free(echo->str);
-	free(echo);
-}
+	int		i;
 
-static char			*ft_create_str(char *line, int i, int start)
-{
-	char *str;
-	char *tmp;
-
-	if ((ft_strchr(">|;\'\"<", line[i]) && i == start))
-		return (ft_strdup("\n"));
-	else if (ft_strchr(">|;\'\"<", line[i]))
-		str = ft_substr(line, start, i - start);
-	else
-		str = ft_substr(line, start, i - start);
-	tmp = ft_strtrim(str, " ");
-	str = tmp;
-	tmp = gnl_strjoin(str, "\n");
-	str = tmp;
-	return (str);
-}
-
-int					ft_echo_parser(char *line, int *i, t_shell *shell)
-{
-	int			start;
-	t_qts		qts;
-	char		*echo_str;
-	t_struct_m	*echo;
-
-	start = *i;
-	echo = ft_calloc(1, sizeof(t_struct_m));
-	if (echo == NULL)
+	i = 1;
+	if (str[0] != '-')
 		return (0);
-	ft_set_qts(&qts);
-	ft_qt_line(line, &qts, i);
-	echo_str = ft_create_str(line, *i, start);
-	shell->echo = ft_strdup(echo_main(echo_str, echo, shell));
-	shell->check.echo = 1;
-	if (line[*i] == ';' || line[*i] == '\0')
-		ft_printf("%s", shell->echo);
-	free_echo_struct(echo);
-	return (0);
+	while (str[i] != '\0')
+	{
+		if (str[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+static int			ft_skip_flags(char **arr, int *check)
+{
+	int i;
+
+	i = 1;
+	while (arr[i] != (char *)0)
+	{
+		if (!ft_isflag(arr[i]))
+			return (i);
+		*check = 1;
+		i++;
+	}
+	return (i);
+}
+
+static char			*ft_make_echo_str(char **argv, int i)
+{
+	char *tmp;
+	char *echo_str;
+
+	tmp = ft_strdup(argv[i]);
+	while (argv[i + 1] != (char *)0)
+	{
+		echo_str = gnl_strjoin(ft_charjoin(tmp, ' '), argv[i + 1]);
+		tmp = echo_str;
+		i++;
+	}
+	return (tmp);
+}
+
+void				ft_echo(t_shell *shell)
+{
+	int		i;
+	int		check;
+	char	*tmp;
+
+	i = 0;
+	check = 0;
+	if (ft_arrlen(shell->argv) == 1)
+		tmp = ft_strdup("");
+	else
+	{
+		i = ft_skip_flags(shell->argv, &check);
+		if (shell->argv[i] == (char *)0)
+			tmp = ft_strdup("");
+		else
+			tmp = ft_make_echo_str(shell->argv, i);
+	}
+	shell->ret = ft_strdup(tmp);
+	if (check == 1)
+		ft_printf("%s", shell->ret);
+	else
+		ft_printf("%s\n", shell->ret);
+	free(tmp);
+	return ;
 }

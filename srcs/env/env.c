@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/18 17:45:23 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/30 20:00:07 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/01 23:00:49 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,27 +49,18 @@ static char	*ft_make_env_str(t_shell *shell)
 	return (new_str);
 }
 
-int			env_main(char *str, t_shell *shell)
+void		ft_env(t_shell *shell)
 {
-	size_t	j;
-
-	j = 0;
-	while (str[j] != '\0')
+	if (ft_arrlen(shell->argv) == 1)
 	{
-		if (str[j] != ' ' && str[j] != '\n')
-			break ;
-		j++;
-	}
-	if (j == ft_strlen(str))
-	{
-		shell->env_s = ft_make_env_str(shell);
+		shell->ret = ft_make_env_str(shell);
+		ft_printf("%s\n", shell->ret);
 		shell->exit_code = 0;
-		return (1);
 	}
 	else
 	{
 		ft_printf_err("omiishell: env: too many arguments.\n");
 		shell->exit_code = 1;
 	}
-	return (0);
+	return ;
 }

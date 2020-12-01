@@ -6,7 +6,7 @@
 #    By: nhariman <nhariman@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/31 23:42:48 by nhariman      #+#    #+#                  #
-#    Updated: 2020/11/30 23:17:52 by nhariman      ########   odam.nl          #
+#    Updated: 2020/12/01 22:41:37 by nhariman      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,13 +28,8 @@ MINISHELL =		main.c \
 				srcs/main/no_quotations_parser.c \
 				srcs/main/main_parser.c \
 				srcs/main/echo_parser.c \
-				srcs/main/rd_parser.c \
 				srcs/valid_input/ft_valid_pipe.c\
 				srcs/subparsers/ft_get_rdin.c \
-				srcs/subparsers/env_parser.c \
-				srcs/subparsers/execv_parser.c \
-				srcs/subparsers/ft_export_parser.c \
-				srcs/subparsers/ft_unset_parser.c \
 				srcs/cd/ft_cd.c \
 				srcs/pwd/ft_pwd.c \
 				srcs/env/env.c \

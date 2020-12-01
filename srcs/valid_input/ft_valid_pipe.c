@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/30 22:39:30 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/12/01 01:18:22 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/01 18:33:38 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int		ft_check_back(char *str, int i)
 	j = 1;
 	while (str[i + j] != '\0')
 	{
-		if (!ft_strchr("<>|;",str[i + j]))
+		if (!ft_strchr(" <>;|",str[i + j]))
 			return (1);
 		j++;
 	}
@@ -30,16 +30,15 @@ static int		ft_check_front(char *str, int i)
 {
 	int		j;
 
-	j = 0;
+	j = 1;
 	while (i - j != 0)
 	{
-		if (!ft_strchr("<>|;",str[i - j]) ||
-		!(ft_strchr("<>|;",str[i - j]) && ft_backslash_check(str, i) % 2 == 0))
+		if (!ft_strchr(" <>|;",str[i - j]) ||
+		!(ft_strchr("<>|;",str[i - j]) && ft_backslash_check(str, i - j) % 2 == 0))
 			return (1);
 		j++;
 	}
-	if (!ft_strchr("<>|;",str[i - j]) ||
-		!(ft_strchr("<>|;",str[i - j]) && ft_backslash_check(str, i) % 2 == 0))
+	if (!ft_strchr(" <>|;",str[0]))
 			return (1);
 	else
 		return (0);	
@@ -47,14 +46,18 @@ static int		ft_check_front(char *str, int i)
 
 static int		ft_valid_pipe_input(char *str)
 {
+	//split on valid |s
+	// if any arr is empty, return error?
 	int	i;
 	int	front;
 	int	back;
 
 	i = 0;
-	while (!(str[i] == '|' && ft_backslash_check(str, i) % 2 == 0))
-		i++;
-	front = ft_check_front(str, i);
+	i = i + ft_iswhitespaces(str + i);
+	if (str[i] == '|')
+		front = 0;
+	else
+		front = ft_check_front(str, i);
 	back = ft_check_back(str, i);
 	if (!front)
 	{

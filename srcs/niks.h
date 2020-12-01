@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 16:24:35 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/30 22:44:42 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/01 22:59:59 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,34 +48,17 @@ typedef struct	s_qts
 **	int			exp;	- export command was used
 **	int			pwd;	- pwd was used
 */
-typedef struct	s_check
-{
-	int			echo;
-	int			env;
-	int			exp;
-	int			exec;
-	int			err;
-	int			pwd;
-	int			rd;
-}				t_check;
 
 typedef struct	s_shell
 {
-	t_check		check;
 	int			exit_code;
 	int			fd;
 	int			oldnb;
-	char		*cmd;
-	char		*echo;
-	char		*pwd;
 	char		**argv;
 	char		*rds;
 	char		**env;
-	char		*env_s;
 	char		*rd_r;
-	char		*err;
-	char		*exprt;
-
+	char		*ret;
 }				t_shell;
 
 /*
@@ -130,28 +113,26 @@ void			ft_skip_rd(char *str, int *i);
 */
 
 void			minishell_parser(char *line, t_shell *shell);
-int				ft_echo_parser(char *line, int *i, t_shell *shell);
-void			ft_cd(char *str, int *i, t_shell *shell);
-void			ft_pwd_main(char *str, int *i, t_shell *shell);
+void			ft_echo(t_shell *shell);
+void			ft_cd(t_shell *shell);
+void			ft_pwd_main(t_shell *shell);
 void			ft_rd_parser(char *str, int *i, t_shell *shell);
-void			ft_env_parser(char *str, int *i, t_shell *shell);
-void			ft_execv_parser(char *cmd, char *str, int *i, t_shell *shell);
 char			*ft_pwd(void);
-void			exit_minishell(char *str, int *i, t_shell *shell);
+void			ft_exit_minishell(char **arr, int len, t_shell *shell);
 
 /*
 ** execve/execute functions
 */
 
 char			**ft_path_array(char *str, char *cmd);
-void			ft_execute(char *cmd, char *str, char end, t_shell *shell);
+void			ft_execute(char *cmd, t_shell *shell);
 int				ft_execve(char **argv, t_shell *shell);
 
 /*
 ** export
 */
-void			ft_export_parser(char *str, int *i, t_shell *shell);
-int				ft_export(char *str, t_shell *shell);
+
+void			ft_export(t_shell *shell);
 int				*ft_order_env(char **env);
 void			ft_sort_env(int *order, char **env, int start);
 char			*ft_parse_env_str(int *order, char **env);
@@ -164,14 +145,13 @@ char			*ft_find_varname(char *str);
 ** unset
 */
 
-void			ft_unset_parser(char *str, int *i, t_shell *shell);
-void			ft_unset(char *str, t_shell *shell);
+void			ft_unset(t_shell *shell);
 
 /*
 ** env
 */
 
-int				env_main(char *str, t_shell *shell);
+void			ft_env(t_shell *shell);
 void			ft_add_env_back(t_shell *shell, char *input);
 int				ft_envlen(t_shell *shell);
 char			*ft_find_variable(char *str, int *i, t_shell *shell);

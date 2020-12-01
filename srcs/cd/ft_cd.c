@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/05 14:38:53 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/30 19:59:58 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/01 21:18:23 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ char		*ft_singlequotes_str(char *str, int *i)
 	return (new_str);
 }
 
-static char	*ft_get_path(char *str, int *i, t_shell *shell)
+static char	*ft_get_path(t_shell *shell)
 {
 	char	*newdir;
 
 	newdir = NULL;
-	if (str[*i] == '\n')
+	if (shell->argv[1] == (char *)0)
 		newdir = ft_find_envvar("HOME", shell);
 	else
-		newdir = ft_no_quotes_str(str, i, shell);
+		newdir = ft_strdup(shell->argv[1]);
 	return (newdir);
 }
 
@@ -55,7 +55,7 @@ static void	ft_update_env_cd(t_shell *shell, char *olddir, char *newdir)
 	}
 }
 
-void		ft_cd(char *str, int *i, t_shell *shell)
+void		ft_cd(t_shell *shell)
 {
 	char	*newdir;
 	int		check;
@@ -63,9 +63,7 @@ void		ft_cd(char *str, int *i, t_shell *shell)
 
 	olddir = ft_pwd();
 	errno = 0;
-	while (str[*i] == ' ')
-		*i = *i + 1;
-	newdir = ft_get_path(str, i, shell);
+	newdir = ft_get_path(shell);
 	check = chdir(newdir);
 	if (check == -1)
 	{

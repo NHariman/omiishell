@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/22 18:29:25 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/30 20:00:28 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/01 20:06:48 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ static int		ft_read_array_input(char *str)
 
 	check = -1;
 	i = 0;
+	if (!str)
+		return (0);
 	len = ft_strlen(str);
 	while (!ft_isdigit(str[i]) && str[i] != '\0' &&
 				str[i] != '-' && str[i] != '+')
@@ -54,16 +56,15 @@ static int		ft_read_array_input(char *str)
 	return (check);
 }
 
-static void		ft_parse_exit_argv(char **arr, int len)
+void			ft_exit_minishell(char **arr, int len, t_shell *shell)
 {
-	int i;
 	int check;
 
-	i = 0;
-	check = ft_read_array_input(arr[0]);
+	ft_printf("exit\n");
+	check = ft_read_array_input(arr[1]);
 	if (check >= 0)
 	{
-		if (len == 1)
+		if (len < 3)
 			exit(check);
 		else
 			ft_printf_err("omiishell: exit: too many arguments\n");
@@ -74,43 +75,6 @@ static void		ft_parse_exit_argv(char **arr, int len)
 			"omiishell: exit: %s: numeric argument required\n", arr[0]);
 			exit(255);
 	}
-	return ;
-}
-
-static void		exit_main(char *str, t_shell *shell)
-{
-	int		len;
-	char	**argv;
-
-	len = ft_count_arr(str);
-	if (len == 0)
-		exit(0);
-	argv = ft_argv(str, shell);
-	if (!argv)
-	{
-		ft_free_array(argv, len);
-		return ;
-	}
-	ft_parse_exit_argv(argv, len);
-	ft_free_array(argv, len);
 	shell->exit_code = 1;
-	return ;
-}
-
-void		exit_minishell(char *str, int *i, t_shell *shell)
-{
-	int		start;
-	t_qts	qts;
-	char	*exit_str;
-
-	start = *i;
-	ft_set_qts(&qts);
-	ft_qt_line(str, &qts, i);
-	ft_printf("exit\n");
-	exit_str = ft_substr(str, start, *i - start);
-	exit_main(exit_str, shell);
-	while (str[*i] != '\0')
-		*i = *i + 1;
-	free(exit_str);
 	return ;
 }
