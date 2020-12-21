@@ -6,46 +6,19 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 17:14:10 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/28 19:28:02 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/09 00:52:01 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-char					*gnl_strjoin(char *s1, char *s2)
-{
-	char		*strduo;
-	size_t		i;
-	size_t		j;
-
-	i = 0;
-	j = 0;
-	strduo = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!strduo)
-	{
-		free(s1);
-		return (NULL);
-	}
-	while (s1 && i < ft_strlen(s1))
-	{
-		strduo[i] = s1[i];
-		i++;
-	}
-	while (s2 && j < ft_strlen(s2))
-	{
-		strduo[i + j] = s2[j];
-		j++;
-	}
-	strduo[i + j] = '\0';
-	free(s1);
-	return (strduo);
-}
 
 static int				find_newline(char *str)
 {
 	int i;
 
 	i = 0;
+	if (!str)
+		return (-1);
 	while (str[i] != '\0')
 	{
 		if (str[i] == '\n')
@@ -54,7 +27,6 @@ static int				find_newline(char *str)
 	}
 	return (-1);
 }
-
 static char				*read_line(t_gnl gnl)
 {
 	char		buf[1000 + 1];
@@ -77,7 +49,7 @@ static char				*read_line(t_gnl gnl)
 		}
 		if (!gnl.line_read)
 			return (NULL);
-		if (find_newline(gnl.line_read) || gnl.line_read[0] == '\n')
+		if (find_newline(buf) > -1)
 			break ;
 	}
 	return (gnl.line_read);
@@ -85,27 +57,68 @@ static char				*read_line(t_gnl gnl)
 
 static int				fill_line(t_gnl gnl, char **line)
 {
-	*line = ft_strtrim(gnl.line_read, "\n");
+	int		newline;
+	size_t	remainder;
+
+	newline = find_newline(gnl.line_read);
+	remainder = 0;
+	if (newline != -1)
+	{
+		if (newline != 0)
+			*line = ft_substr(gnl.line_read, 0, newline);
+		else
+			*line = ft_strdup("");
+		remainder = 1;
+	}
+	else
+		*line = ft_strdup(gnl.line_read);
 	if (!*line)
 		return (-1);
-	return (1);
+	return (newline != -1 && remainder ? 1 : 0);
+}
+
+static char				*fill_leftover(char *str)
+{
+	int		newline;
+	char	*leftover;
+
+	newline = find_newline(str);
+	if (newline != -1)
+	{
+		leftover = ft_substr(str, newline + 1, ft_strlen(str) - newline - 1);
+		if (!leftover)
+			return (NULL);
+	}
+	else
+		return (NULL);
+	return (leftover);
 }
 
 int						get_next_line(int fd, char **line)
 {
+	static char		*leftover;
 	t_gnl			gnl;
 	int				ret;
 
-	ret = 0;
 	if (fd < 0 || line == NULL)
 		return (-1);
 	gnl.line_read = NULL;
 	gnl.fd = fd;
 	*line = gnl.line_read;
-	gnl.line_read = read_line(gnl);
+	if (leftover)
+	{
+		gnl.line_read = ft_strdup(leftover);
+		free(leftover);
+		leftover = NULL;
+	}
+	if (find_newline(gnl.line_read) == -1)
+		gnl.line_read = read_line(gnl);
 	if (!gnl.line_read)
 		return (-1);
 	ret = fill_line(gnl, line);
+	gnl.newline = find_newline(gnl.line_read);
+	if (gnl.newline != -1)
+		leftover = fill_leftover(gnl.line_read);
 	free(gnl.line_read);
-	return (ret);
+	return ((gnl.newline != -1 && !leftover) ? -1 : ret);
 }

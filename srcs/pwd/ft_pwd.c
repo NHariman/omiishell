@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/05 14:38:58 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/12/01 23:04:47 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/03 18:55:49 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void		ft_pwd_main(t_shell *shell)
 {
 	char	cwd[1024];
 	char	*cwd_res;
-	
+
 	errno = 0;
 	cwd_res = getcwd(cwd, sizeof(cwd));
 	if (cwd_res == NULL)

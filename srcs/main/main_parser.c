@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/07 16:08:40 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/12/03 00:26:13 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/20 19:35:40 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,59 +26,53 @@ static char		*get_cmd(char *str, int *i, t_shell *shell)
 {
 	char	*cmd;
 
-	cmd = ft_no_quotes_str(str, i, shell);
+	*i = *i + ft_iswhitespaces(str + *i);
+	cmd = ft_no_quotes_str(str, i, shell, " ");
 	if (cmd == NULL)
 		return (NULL);
-	while (ft_strchr(cmd, '=') != NULL)
+	while (cmd != NULL && ft_strchr(cmd, '=') != NULL)
 	{
 		free(cmd);
+		cmd = NULL;
 		while (str[*i] == ' ')
 			*i = *i + 1;
-		cmd = ft_no_quotes_str(str, i, shell);
+		if (str[*i] != '\0')
+			cmd = ft_no_quotes_str(str, i, shell, " ");
 	}
 	return (cmd);
 }
 
-static void		ft_check_case(char *cmd, t_shell *shell)
+static void		ft_check_case(t_shell *shell)
 {
-	if (!ft_strcmp(cmd, "echo"))
+	if (!ft_strcmp(shell->argv[0], "echo"))
 		ft_echo(shell);
-	else if (!ft_strcmp(cmd, "env"))
+	else if (!ft_strcmp(shell->argv[0], "env"))
 		ft_env(shell);
-	else if (!ft_strcmp(cmd, "pwd"))
+	else if (!ft_strcmp(shell->argv[0], "pwd"))
 		ft_pwd_main(shell);
-	else 
-		ft_execute(cmd, shell);
+	else
+		ft_execute(shell->argv[0], shell);
 }
 
 static void		ft_wordparser(t_shell *shell)
 {
-	char	*cmd;
-
 	if (shell->argv[0] == NULL)
 		return ;
-	cmd = ft_strdup(shell->argv[0]);
-	if (cmd[0] == '\0' || cmd == (char *)0)
-		return ;
-	if (!ft_strcmp(cmd, "exit"))
+	if (!ft_strcmp(shell->argv[0], "exit"))
 		ft_exit_minishell(shell->argv, ft_arrlen(shell->argv), shell);
-	else if (!ft_strcmp(cmd, "export"))
+	else if (!ft_strcmp(shell->argv[0], "export"))
 		ft_export(shell);
-	else if (!ft_strcmp(cmd, "unset"))
+	else if (!ft_strcmp(shell->argv[0], "unset"))
 		ft_unset(shell);
-	else if (!ft_strcmp(cmd, "cd"))
+	else if (!ft_strcmp(shell->argv[0], "cd"))
 		ft_cd(shell);
-	else if (ft_strchr("eEpP", cmd[0]))
-		ft_check_case(cmd, shell);
+	else if (ft_strchr("eEpP", shell->argv[0][0]))
+		ft_check_case(shell);
 	else
-		ft_execute(cmd, shell);
+		ft_execute(shell->argv[0], shell);
 }
 
-/*
-** needs inbetween parser that separates per valid pipe.
-*/
-
-static void		function_dispatcher(char *line, t_shell *shell)
+void			function_dispatcher(char *line, t_shell *shell)
 {
 	int		i;
 	char	*cmd;
@@ -86,7 +80,8 @@ static void		function_dispatcher(char *line, t_shell *shell)
 
 	i = 0;
 	cmd = get_cmd(line, &i, shell);
-	tmp = ft_argv(line + i, shell);
+	tmp = ft_argv(line + i +
+		ft_iswhitespaces(line + i + 1), shell);
 	if (!tmp)
 		shell->argv = empty_array(cmd);
 	else
@@ -102,42 +97,23 @@ static void		function_dispatcher(char *line, t_shell *shell)
 	if (!shell->rds)
 		ft_wordparser(shell);
 	else if (shell->rds)
+	{	
 		rd_main(shell->rds, shell);
+		free(shell->rds);
+	}
 }
 
 void			minishell_parser(char *line, t_shell *shell)
 {
 	t_qts		qts;
-	int			i;
-	char		**prompts;
 
-	i = 0;
-	if (line[0] == '\0')
+	if (line[0] == '\0' || ft_invalid_line(line, shell, ';') ||
+	ft_invalid_line(line, shell, '|'))
 		return ;
-	if (ft_invalid_line(line) == 1)
-		return ;
-	prompts = (char **)0;
 	ft_set_qts(&qts);
 	ft_qt_start(line, &qts);
 	if (qts.dq % 2 != 0 || qts.sq % 2 != 0)
 		ft_printf_err("Error\nHanging quotes. Parsing failed.\n");
 	else
-	{
-		prompts = ft_get_prompts(line);
-		int k = 0;
-		while (prompts[k] != (char *)0)
-		{
-			ft_printf("prompts[%i]: {%s}\n", k, prompts[k]);
-			k++;
-		}
-		if (ft_invalid_pipe(prompts) == 1)
-			return ;
-		while (prompts[i] != (char *)0)
-		{
-			function_dispatcher(prompts[i], shell);
-			ft_clear_shell(shell);
-			i++;
-		}
-		ft_free_array(prompts, ft_arrlen(prompts));
-	}
+		ft_make_prompts(line, shell);
 }

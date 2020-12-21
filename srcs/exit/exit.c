@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/22 18:29:25 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/12/01 20:06:48 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/22 00:07:42 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void			ft_exit_minishell(char **arr, int len, t_shell *shell)
 	else
 	{
 		ft_printf_err(
-			"omiishell: exit: %s: numeric argument required\n", arr[0]);
+			"minihell: exit: %s: numeric argument required\n", arr[1]);
 			exit(255);
 	}
 	shell->exit_code = 1;

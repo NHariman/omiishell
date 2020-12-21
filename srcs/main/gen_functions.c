@@ -6,46 +6,74 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/06 03:52:14 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/30 23:17:18 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/09 19:44:29 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int		ft_invalid_line(char *str)
+char	*ft_make_single_char_str(char c)
 {
-	int		i;
+	char *num;
+
+	num = (char *)malloc(sizeof(char) * 2);
+	if (!num)
+		return (NULL);
+	num[0] = c;
+	num[1] = '\0';
+	return (num);
+}
+
+char		*ft_strtrimfree(char *s1, char const *set)
+{
+	size_t	start;
+	size_t	end;
+	char	*trim;
+
+	if (!s1)
+		return (0);
+	start = 0;
+	end = ft_strlen(s1);
+	if (set == NULL || set[0] == '\0')
+		return ((char *)s1);
+	while (ft_strchr(set, s1[start]) && s1[start] != '\0')
+		start++;
+	if (start == end)
+		return (ft_strdup(""));
+	while (ft_strchr(set, s1[end - 1]) && end != 0)
+		end--;
+	trim = ft_substr(s1, start, end - start);
+	free(s1);
+	return (trim);
+}
+
+char					*gnl_strjoin(char *s1, char *s2)
+{
+	char		*strduo;
+	size_t		i;
+	size_t		j;
 
 	i = 0;
-	while (str[i] == ' ')
-		i++;
-	if (str[i] == ';' && ft_backslash_check(str, i) % 2 == 0)
+	j = 0;
+	strduo = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	if (!strduo)
 	{
-		ft_printf_err("omiishell: syntax error near unexpected token `;'\n");
-		return (1);
+		free(s1);
+		return (NULL);
 	}
-	return (0);
-}
-
-char	*ft_rm_endline(char *str)
-{
-	int		len;
-	char	*new;
-
-	len = ft_strlen(str);
-	new = ft_substr(str, 0, len - 1);
-	return (new);
-}
-
-void	ft_find_arg(char *str, int *i)
-{
-	t_qts	qts;
-
-	ft_set_qts(&qts);
-	ft_qt_line(str, &qts, i);
-	while (!ft_strchr("$><;| \n\0", str[*i]))
-		*i = *i + 1;
-	return ;
+	while (s1 && i < ft_strlen(s1))
+	{
+		strduo[i] = s1[i];
+		i++;
+	}
+	while (s2 && j < ft_strlen(s2))
+	{
+		strduo[i + j] = s2[j];
+		j++;
+	}
+	strduo[i + j] = '\0';
+	free(s1);
+	return (strduo);
 }
 
 char					*ft_strjointwo(char *s1, char *s2)

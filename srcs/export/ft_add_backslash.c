@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/27 02:42:17 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/27 03:35:27 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/08 22:40:22 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ static char		*ft_parse_value(char *str)
 		i++;
 	}
 	output = ft_add_output(str, i, &trim);
+	free(str);
 	free(trim.res);
 	return (output);
 }

@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/23 23:27:59 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/12/01 19:59:49 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/22 00:07:27 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int		ft_execute_path(char **pathcmd, char **argv, t_shell *shell)
 			execve(pathcmd[i], argv, shell->env);
 			i++;
 		}
-		ft_printf_err("omiishell: %s: command not found.\n", argv[0],
+		ft_printf_err("omiishell: %s: command not found\n", argv[0],
 		strerror(errno));
 		exit(1);
 	}
@@ -71,6 +71,7 @@ static int		ft_execve_path(char *cmd, char **argv, t_shell *shell)
 	child_status = ft_execute_path(pathcmd, argv, shell);
 	if (child_status != 0)
 		shell->exit_code = 127;
+	ft_free_array(pathcmd, ft_arrlen(pathcmd));
 	return (0);
 }
 
@@ -104,7 +105,11 @@ void			ft_execute(char *cmd, t_shell *shell)
 {
 	shell->exit_code = 0;
 	if (ft_ispath(cmd))
+	{
+		if (ft_is_directory(cmd, shell))
+			return ;
 		ft_execve(shell->argv, shell);
+	}
 	else
 		ft_execve_path(cmd, shell->argv, shell);
 	return ;

@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/23 21:15:13 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/12/01 23:03:13 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/08 20:52:13 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,26 @@ static void	ft_free_shell(char *str)
 
 void	ft_clear_shell(t_shell *shell)
 {
+	shell->check.echo = 0;
+	shell->check.env = 0;
+	shell->check.exp = 0;
+	shell->check.exec = 0;
+	shell->check.err = 0;
+	shell->check.pwd = 0;
 	shell->fd = -1;
 	shell->oldnb = 0;
+	if (shell->argv != NULL)
+		ft_free_array(shell->argv, ft_arrlen(shell->argv));
 	if (shell->ret != (char *)0)
 		ft_free_shell(shell->ret);
-	if (shell->argv != (char **)0)
-		ft_free_array(shell->argv, ft_arrlen(shell->argv));
-	if (shell->rd_r != (char *)0)
-		ft_free_shell(shell->rd_r);
-	if (shell->rds != (char *)0)
-		ft_free_shell(shell->rds);
+	if (shell->echo != (char *)0)
+		ft_free_shell(shell->echo);
+	if (shell->pwd != (char *)0)
+		ft_free_shell(shell->pwd);
+	if (shell->env_s != (char *)0)
+		ft_free_shell(shell->env_s);
+	if (shell->exprt != NULL)
+		ft_free_shell(shell->exprt);
+	if (shell->err != (char *)0)
+		ft_free_shell(shell->err);
 }

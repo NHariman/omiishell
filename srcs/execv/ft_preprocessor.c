@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/26 17:07:55 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/26 19:41:41 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/08 19:36:38 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,30 +35,25 @@ static void			ft_add_cmd(char **pathcmd, char *cmd)
 	int		i;
 
 	i = 0;
-	newcmd = ft_strjointwo("/", cmd);
+	newcmd = ft_strjoin("/", cmd);
 	while (pathcmd[i] != (char *)0)
 	{
 		tmp = gnl_strjoin(pathcmd[i], newcmd);
-		pathcmd[i] = ft_strdup(tmp);
-		free(tmp);
+		pathcmd[i] = tmp;
 		i++;
 	}
+	free(newcmd);
 }
 
-char				**ft_path_array(char *str, char *cmd)
+static char			**fill_path(char **pathcmd, char *str)
 {
-	int		count;
 	int		start;
 	int		i;
 	int		j;
-	char	**pathcmd;
-
-	count = ft_count_paths(str);
+	
 	start = 0;
 	i = 0;
 	j = 0;
-	pathcmd = (char **)malloc(sizeof(char *) * (count + 1));
-	pathcmd[count] = (char *)0;
 	while (str[i] != '\0')
 	{
 		if (str[i] == ':')
@@ -70,6 +65,21 @@ char				**ft_path_array(char *str, char *cmd)
 		i++;
 	}
 	pathcmd[j] = ft_substr(str, start, i - start);
+	return (pathcmd);
+}
+
+char				**ft_path_array(char *str, char *cmd)
+{
+	int		count;
+	char	**pathcmd;
+
+	count = ft_count_paths(str);
+	pathcmd = (char **)malloc(sizeof(char *) * (count + 2));
+	if (!pathcmd)
+		ft_malloc_fail();
+	pathcmd[count + 1] = (char *)0;
+	pathcmd = fill_path(pathcmd, str);
+	free(str);
 	ft_add_cmd(pathcmd, cmd);
 	return (pathcmd);
 }

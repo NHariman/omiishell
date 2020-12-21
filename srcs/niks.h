@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 16:24:35 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/12/01 22:59:59 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/21 19:12:09 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct	s_gnl
 	int				bytes_read;
 	int				fd;
 	char			*line_read;
+	int				newline;
 }				t_gnl;
 
 typedef	struct	s_trim
@@ -48,17 +49,35 @@ typedef struct	s_qts
 **	int			exp;	- export command was used
 **	int			pwd;	- pwd was used
 */
+typedef struct	s_check
+{
+	int			echo;
+	int			env;
+	int			exp;
+	int			exec;
+	int			err;
+	int			pwd;
+	int			rd;
+}				t_check;
 
 typedef struct	s_shell
 {
+	t_check		check;
 	int			exit_code;
 	int			fd;
+	int			fd_r;
 	int			oldnb;
+	char		*ret;
+	char		*echo;
+	char		*pwd;
 	char		**argv;
 	char		*rds;
 	char		**env;
-	char		*rd_r;
-	char		*ret;
+	char		*env_s;
+	// char		*rd_r;
+	char		*err;
+	char		*exprt;
+
 }				t_shell;
 
 /*
@@ -69,22 +88,26 @@ void			ft_set_qts(t_qts *qts);
 void			ft_qt_line(char *line, t_qts *qts, int *i);
 void			ft_qt_start(char *line, t_qts *qts);
 int				ft_backslash_check(char *line, int i);
-int				ft_invalid_pipe(char **arr);
-int				ft_invalid_line(char *str);
+int				ft_invalid_line(char *str, t_shell *shell, char token);
+char			**ft_fill_prompts(char **prompts, char *str, int len, char token);
+void			ft_make_prompts(char *str, t_shell *shell);
+void			ft_pipe_splitter(char *str, t_shell *shell);
+void			function_dispatcher(char *line, t_shell *shell);
 
 /*
 ** general functions
 */
+int				ft_isspecial(int c);
+char			*ft_strtrimfree(char *s1, char const *set);
 char			**ft_get_prompts(char *str);
-char			*ft_rm_endline(char *str);
 char			*gnl_strjoin(char *s1, char *s2);
 char			*ft_strjointwo(char *s1, char *s2);
-void			ft_find_arg(char *str, int *i);
 int				get_next_line(int fd, char **line);
 char			*ft_charjoin(char *str, char c);
 char			*ft_make_single_char_str(char c);
 char			**ft_argv(char *str, t_shell *shell);
 int				ft_count_arr(char *str);
+char			**ft_arrdup(char **arr);
 int				ft_arrlen(char **arr);
 char			**ft_add_arr_front(char **arr, char *input);
 char			**ft_add_arr_back(char **arr, char *input);
@@ -97,12 +120,13 @@ char			*ft_get_rdin(char *str);
 ** quotes parsing.
 */
 
-void			ft_skip_quotes(char *str, int *i, int type);
+void			ft_skip_quotes(char *str, int *i, char type);
 void			ft_strspecial(char *str, t_trim *trim, int *i, char c);
 void			ft_parse_dollar(char *str, int *i,
 							t_trim *trim, t_shell *shell);
 char			*ft_doublequotes_str(char *str, int *i, t_shell *shell);
-char			*ft_no_quotes_str(char *str, int *i, t_shell *shell);
+char			*ft_no_quotes_str(
+					char *str, int *i, t_shell *shell, char *stop);
 char			*ft_singlequotes_str(char *str, int *i);
 int				ft_qt_check(char *line, int *i, int type, t_qts *qts);
 void			ft_skip_redirections(char *str, int *i, t_trim *trim);
@@ -124,6 +148,7 @@ void			ft_exit_minishell(char **arr, int len, t_shell *shell);
 ** execve/execute functions
 */
 
+int				ft_is_directory(char *cmd, t_shell *shell);
 char			**ft_path_array(char *str, char *cmd);
 void			ft_execute(char *cmd, t_shell *shell);
 int				ft_execve(char **argv, t_shell *shell);
@@ -152,8 +177,6 @@ void			ft_unset(t_shell *shell);
 */
 
 void			ft_env(t_shell *shell);
-void			ft_add_env_back(t_shell *shell, char *input);
-int				ft_envlen(t_shell *shell);
 char			*ft_find_variable(char *str, int *i, t_shell *shell);
 char			*ft_find_envvar(char *var, t_shell *shell);
 

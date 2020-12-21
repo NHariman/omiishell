@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_unset_parser.c                                  :+:    :+:            */
+/*   ft_is_directory.c                                  :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/11/27 07:42:49 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/28 22:20:28 by nhariman      ########   odam.nl         */
+/*   Created: 2020/12/20 21:54:48 by nhariman      #+#    #+#                 */
+/*   Updated: 2020/12/22 00:07:35 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void			ft_unset_parser(char *str, int *i, t_shell *shell)
+int			ft_is_directory(char *cmd, t_shell *shell)
 {
-	int		start;
-	char	*substr;
-	t_qts	qts;
+	struct stat	statbuf;
+	int			check;
 
-	start = *i;
-	ft_set_qts(&qts);
-	ft_qt_line(str, &qts, i);
-	substr = ft_substr(str, start, *i - start);
-	ft_unset(substr, shell);
-	free(substr);
-	shell->exit_code = 0;
-	return ;
+	check = lstat(cmd, &statbuf);
+	if (S_ISDIR(statbuf.st_mode))
+	{
+		shell->exit_code = 126;
+		return (ft_printf_err("omiishell: %s: is a directory\n", shell->argv[0]));
+	}
+	return (0);
 }

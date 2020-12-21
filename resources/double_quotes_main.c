@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
+/*   double_quotes_main.c                               :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/31 15:07:26 by ybakker       #+#    #+#                 */
-/*   Updated: 2020/11/13 18:27:31 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/22 00:05:30 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int		main(int argc, char *argv[], char *envp[])
 	while (i > 0)
 	{
 		j = 0;
-		ft_printf("minishell> ");
+		ft_printf("omiishell> ");
 		i = get_next_line(0, &line);
 		if (!ft_strncmp(line, "exit\n", ft_strlen("exit\n")))
 			exit_minishell();

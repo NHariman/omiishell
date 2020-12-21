@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/05 14:38:53 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/12/01 21:18:23 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/18 18:17:04 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static char	*ft_get_path(t_shell *shell)
 	if (shell->argv[1] == (char *)0)
 		newdir = ft_find_envvar("HOME", shell);
 	else
-		newdir = ft_strdup(shell->argv[1]);
+		newdir = shell->argv[1];
 	return (newdir);
 }
 
@@ -43,8 +43,6 @@ static void	ft_update_env_cd(t_shell *shell, char *olddir, char *newdir)
 	int		i;
 
 	i = 0;
-	if (ft_find_envvar("OLDPWD", shell) == NULL)
-		ft_add_env_back(shell, olddir);
 	while (shell->env[i] != (char *)0)
 	{
 		if (!ft_strncmp(shell->env[i], "OLDPWD=", ft_strlen("OLDPWD=")))
@@ -67,12 +65,15 @@ void		ft_cd(t_shell *shell)
 	check = chdir(newdir);
 	if (check == -1)
 	{
-		ft_printf_err("omiishell: cd: %s: %s\n",
+		ft_printf_err("minishell: cd: %s: %s\n",
 			newdir, strerror(errno));
 		shell->exit_code = 1;
 	}
 	else
-		ft_update_env_cd(shell, olddir, ft_pwd());
-	free(newdir);
+	{
+		newdir = ft_pwd();
+		ft_update_env_cd(shell, olddir, newdir);
+		shell->exit_code = 0;
+	}
 	return ;
 }

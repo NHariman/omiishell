@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/02/24 17:31:04 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/11/15 16:53:35 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/11/26 21:51:22 by anonymous     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,7 @@ void		ft_print_str(const char *str, int *count, t_flag *flags)
 	if (!str)
 		str = "(null)";
 	i = 0;
-	strlen = ((size_t)flags->pre < ft_strlen(str)) ?
-				flags->pre : ft_strlen(str);
+	strlen = ((size_t)flags->pre < ft_strlen(str)) ? flags->pre : (int)ft_strlen(str);
 	if (!flags->dash && !flags->zero && flags->pad > 0)
 		ft_pad(flags->pad - strlen, count);
 	if (flags->zero && !flags->dash)

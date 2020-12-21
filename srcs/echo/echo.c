@@ -114,6 +114,7 @@ char			*echo_main(char *str, t_struct_m *echo, t_shell *shell)
 		echo->i = check_flag_n(echo);
 	get_echo_str(echo);
 	ft_handle_echo(echo, shell);
+	ft_strtrim(echo->str, "\n");
 	if (echo->n == 0 && echo->flag != 1)
 	{
 		echo->cache = ft_strjoin(echo->str, "\n");

@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/14 13:44:13 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/12/01 18:35:38 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/17 15:40:53 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ static	void	ft_nqts_dq_strjoin(char *str, int *i,
 	new_str = ft_doublequotes_str(str, i, shell);
 	tmp = trim->res;
 	trim->res = gnl_strjoin(tmp, new_str);
+	free(new_str);
 	trim->start = *i;
 }
 
@@ -54,29 +55,27 @@ static	void	ft_nqts_sq_strjoin(char *str, int *i, t_trim *trim)
 	*i = *i + 1;
 	tmp = trim->res;
 	trim->res = gnl_strjoin(tmp, new_str);
+	free(new_str);
 	trim->start = *i;
 }
 
 static void		ft_nqts_nqts_strjoin(char *str, int *i, t_trim *trim)
 {
-	char	*tmp;
 	char	*new_str;
 	int		start;
 
 	if (trim->res == NULL)
 		trim->res = ft_substr(str, trim->start, *i - trim->start);
 	start = *i;
-	while (!ft_strchr("\"\'><|; ", str[*i]) &&
-	!(str[*i] == '\\') &&
-		str[*i] != '\0')
+	while (!ft_strchr("\\$\"\'>< ", str[*i]) && str[*i] != '\0')
 		*i = *i + 1;
 	new_str = ft_substr(str, start, *i - start);
-	tmp = trim->res;
-	trim->res = gnl_strjoin(tmp, new_str);
+	trim->res = gnl_strjoin(trim->res, new_str);
+	free(new_str);
 	trim->start = *i;
 }
 
-char			*ft_no_quotes_str(char *str, int *i, t_shell *shell)
+char			*ft_no_quotes_str(char *str, int *i, t_shell *shell, char *stop)
 {
 	t_trim		trim;
 	char		*output;
@@ -84,9 +83,9 @@ char			*ft_no_quotes_str(char *str, int *i, t_shell *shell)
 	trim.res = (char *)0;
 	output = NULL;
 	trim.start = *i;
-	while (!ft_strchr(" ", str[*i]) && str[*i] != '\0')
+	while (!ft_strchr(stop, str[*i]) && str[*i] != '\0')
 	{
-		if (str[*i] == '$' && !ft_strchr(" ;\0", str[*i + 1]))
+		if (str[*i] == '$' && !ft_strchr(" ;\n", str[*i + 1]))
 			ft_parse_dollar(str, i, &trim, shell);
 		else if (str[*i] == '\\')
 			ft_strspecial(str, &trim, i, str[*i + 1]);

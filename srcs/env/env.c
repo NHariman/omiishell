@@ -6,7 +6,7 @@
 /*   By: nhariman <nhariman@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/18 17:45:23 by nhariman      #+#    #+#                 */
-/*   Updated: 2020/12/01 23:00:49 by nhariman      ########   odam.nl         */
+/*   Updated: 2020/12/22 00:07:07 by nhariman      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,21 @@
 
 static char	*ft_make_env_str(t_shell *shell)
 {
-	int		len;
 	int		i;
 	char	*new_str;
 	char	*tmp;
+	char	*output;
 
-	len = ft_envlen(shell);
 	new_str = ft_charjoin(shell->env[0], '\n');
 	i = 1;
-	while (i < len - 1)
+	while (shell->env[i] != (char *)0)
 	{
-		tmp = gnl_strjoin(new_str, ft_charjoin(shell->env[i], '\n'));
+		output = ft_charjoin(shell->env[i], '\n');
+		tmp = gnl_strjoin(new_str, output);
+		free(output);
 		new_str = tmp;
 		i++;
 	}
-	tmp = gnl_strjoin(new_str, shell->env[i]);
-	new_str = tmp;
 	return (new_str);
 }
 
@@ -54,7 +53,8 @@ void		ft_env(t_shell *shell)
 	if (ft_arrlen(shell->argv) == 1)
 	{
 		shell->ret = ft_make_env_str(shell);
-		ft_printf("%s\n", shell->ret);
+		ft_printf("%s", shell->ret);
+		free(shell->ret);
 		shell->exit_code = 0;
 	}
 	else
