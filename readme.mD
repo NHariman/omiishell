@@ -1,5 +1,5 @@
 <h1>Codam Coding College Project: minishell</h1>
-<p>minishell in collaboration with YUSHUA@github</p>
+<p>minishell done on my own as practice.</p>
 <p><b>Project description:</b><br>
 A simplified shell program that follows the rules of bash.</p>
 <p><b>Functionalities</b>:<br>
