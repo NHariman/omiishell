@@ -42,14 +42,6 @@ typedef struct	s_qts
 	int			sq;
 }				t_qts;
 
-/*
-**	int			echo;	- echo command was used
-**	int			env;	- env command was used
-**	int			exec;	- exec command was used
-**	int			exp;	- export command was used
-**	int			pwd;	- pwd was used
-*/
-
 typedef struct	s_shell
 {
 	int			exit_code;
