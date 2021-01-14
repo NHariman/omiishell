@@ -49,34 +49,13 @@ typedef struct	s_qts
 **	int			exp;	- export command was used
 **	int			pwd;	- pwd was used
 */
-typedef struct	s_check
-{
-	int			echo;
-	int			env;
-	int			exp;
-	int			exec;
-	int			err;
-	int			pwd;
-	int			rd;
-}				t_check;
 
 typedef struct	s_shell
 {
-	t_check		check;
 	int			exit_code;
-	int			fd;
-	int			fd_r;
-	int			oldnb;
-	char		*ret;
-	char		*echo;
-	char		*pwd;
 	char		**argv;
-	char		*rds;
 	char		**env;
-	char		*env_s;
-	// char		*rd_r;
-	char		*err;
-	char		*exprt;
+	char		**rds;
 
 }				t_shell;
 
